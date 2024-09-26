@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fab360402207d1f489cdfc2527e8d644, type: 3}
+  m_Name: Gun Data_high
+  m_EditorClassIdentifier: 
+  shotClip: {fileID: 8300000, guid: b54b55b179b735446af6704f32b73f56, type: 3}
+  reloadClip: {fileID: 8300000, guid: b45e622d3ad944543a9fcef0fef316d4, type: 3}
+  damage: 50
+  startAmmoRemain: 100
+  magCapacity: 25
+  timeBetFire: 0.12
+  reloadTime: 1.8
