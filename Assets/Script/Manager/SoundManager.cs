@@ -4,9 +4,10 @@ using UnityEngine;
 
 public class SoundManager : MonoBehaviour
 {
-    public AudioSource[] BGMsources;
-    public AudioSource[] SFXSources;
+    public AudioSource SFXSource;
+    public AudioClip[] SFXClips;
 
+    private Dictionary<string, AudioClip> sfxDict = new Dictionary<string, AudioClip>();
     public static SoundManager instance
     {
         get
@@ -27,65 +28,49 @@ public class SoundManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
-    }
-
-    // BMG 음소거
-    public void BGMSoundAllMute()
-    {
-        for (int i = 0; i < BGMsources.Length; i++)
+        else
         {
-            BGMsources[i].mute = true;
+            InitSFXClips();
         }
     }
 
-    // BGM 음소거 해제
-    public void BGMSoundAllOn()
+    private void InitSFXClips()
     {
-        for (int i = 0; i < BGMsources.Length; i++)
+        foreach (var clip in SFXClips)
         {
-            BGMsources[i].mute = false;
+            sfxDict.Add(clip.name, clip); 
         }
     }
 
     // 효과음 음소거
     public void SFXSoundAllMute()
     {
-        for (int i = 0; i < SFXSources.Length; i++)
-        {
-            SFXSources[i].mute = true;
-        }
+        SFXSource.mute = true;
     }
 
     // 효과음 음소거 해제
     public void SFXSoundAllOn()
     {
-        for (int i = 0; i < SFXSources.Length; i++)
+        SFXSource.mute = false;
+    }
+
+    // SFX 재생
+    public void PlaySFX(string sfxName)
+    {
+        if (sfxDict.ContainsKey(sfxName))
         {
-            SFXSources[i].mute = false;
+            SFXSource.clip = sfxDict[sfxName];
+            SFXSource.PlayOneShot(SFXSource.clip); 
+        }
+        else
+        {
+            Debug.LogWarning("SFX 클립을 찾을 수 없습니다: " + sfxName);
         }
     }
 
-    // 효과음 멈추기
-    public void stopSound(string soundName)
+    // SFX 멈추기
+    public void StopSFX()
     {
-        for (int i = 0; i < SFXSources.Length; i++)
-        {
-            if (SFXSources[i].gameObject.name.CompareTo(soundName) == 0)
-            {
-                SFXSources[i].Stop();
-            }
-        }
-    }
-
-    // 효과음 플레이
-    public void PlaySound(string soundName)
-    {
-        for (int i = 0; i < SFXSources.Length; i++)
-        {
-            if (SFXSources[i].gameObject.name.CompareTo(soundName) == 0)
-            {
-                SFXSources[i].Play();
-            }
-        }
+        SFXSource.Stop();
     }
 }

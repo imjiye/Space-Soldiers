@@ -6,11 +6,11 @@ public class PlayerHealth : LivingThings
 {
     public Slider healthSlider; // 체력을 표시할 UI 슬라이더
 
-    public AudioClip deathClip; // 사망 소리
-    public AudioClip hitClip; // 피격 소리
-    public AudioClip itemPickupClip; // 아이템 습득 소리
+    //public AudioClip deathClip; // 사망 소리
+    //public AudioClip hitClip; // 피격 소리
+    //public AudioClip itemPickupClip; // 아이템 습득 소리
 
-    private AudioSource playerAudioPlayer; // 플레이어 소리 재생기
+    //private AudioSource playerAudioPlayer; // 플레이어 소리 재생기
     private Animator playerAnimator; // 플레이어의 애니메이터
 
     public ParticleSystem Life_P;
@@ -24,7 +24,7 @@ public class PlayerHealth : LivingThings
     {
         // 사용할 컴포넌트를 가져오기
         playerAnimator = GetComponent<Animator>();
-        playerAudioPlayer = GetComponent<AudioSource>();
+        //playerAudioPlayer = GetComponent<AudioSource>();
 
         playerMovement = GetComponent<PlayerMove>();
         playerShooter = GetComponent<PlayerShooter>();
@@ -66,7 +66,8 @@ public class PlayerHealth : LivingThings
         if (!dead)
         {
             // 사망하지 않은 경우에만 효과음 재생
-            playerAudioPlayer.PlayOneShot(hitClip);
+            SoundManager.instance.PlaySFX("Hit");
+            //playerAudioPlayer.PlayOneShot(hitClip);
         }
 
         // LivingEntity의 OnDamage() 실행(데미지 적용)
@@ -85,8 +86,6 @@ public class PlayerHealth : LivingThings
         // 체력 슬라이더 비활성화
         healthSlider.gameObject.SetActive(false);
 
-        // 사망음 재생
-        playerAudioPlayer.PlayOneShot(deathClip);
         // 애니메이터의 Die 트리거를 발동시켜 사망 애니메이션 재생
         playerAnimator.SetTrigger("Die");
 
@@ -112,16 +111,19 @@ public class PlayerHealth : LivingThings
                 if(other.tag == "Life")
                 {
                     Life_P.Play();
+                    SoundManager.instance.PlaySFX("Life");
                     Invoke("Life_OffEffect", 3f);
                 }
                 else if(other.tag == "Bullet")
                 {
                     Bullet_P.Play();
+                    SoundManager.instance.PlaySFX("Bullet");
                     Invoke("Bullet_OffEffect", 3f);
                 }
                 else if(other.tag == "Coin")
                 {
                     Coin_P.Play();
+                    SoundManager.instance.PlaySFX("Coin");
                     Invoke("Coin_OffEffect", 3f);
                 }
                 
@@ -132,14 +134,17 @@ public class PlayerHealth : LivingThings
     public void Life_OffEffect()
     {
         Life_P.Stop();
+        SoundManager.instance.StopSFX();
     }
         public void Bullet_OffEffect()
     {
         Bullet_P.Stop();
+        SoundManager.instance.StopSFX();
     }
 
     public void Coin_OffEffect()
     {
         Coin_P.Stop();
+        SoundManager.instance.StopSFX();
     }
 }

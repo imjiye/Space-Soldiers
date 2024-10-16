@@ -14,16 +14,21 @@ public class AnonyOfChange : MonoBehaviour
     FirebaseUser user = null;
 
     public GameObject emailPanel;
+    public GameObject successed;
+    public GameObject failed;
 
     private void Start()
     {
         auth = Firebase.Auth.FirebaseAuth.DefaultInstance;
+
+        successed.SetActive(false);
+        failed.SetActive(false);
     }
 
     // 익명로그인 -> 이메일 로그인
     public void onAnonyToEmail()
     {
-        if(emailPanel == null)
+        if (emailPanel == null)
         {
             Debug.Log("이메일 전환창이 없습니다.");
             return;
@@ -42,30 +47,62 @@ public class AnonyOfChange : MonoBehaviour
     public InputField pw;
     public void onEmailChangeSwich()
     {
-        if(id.text.Length < 1 ||  pw.text.Length < 1)
+        if (id.text.Length < 1 || pw.text.Length < 4)
         {
-            Debug.Log("이메일이나 비밀번호가 비어있습니다.");
-            return;
+            FailOpen();
+            //return;
         }
 
         Credential credential = Firebase.Auth.EmailAuthProvider.GetCredential(id.text, pw.text);
         auth.CurrentUser.LinkWithCredentialAsync(credential).ContinueWith(task =>
         {
-            if(task.IsCanceled)
+
+            if (task.IsCanceled || task.IsFaulted)
             {
-                Debug.Log("Email Login task.IsCanceled");
-                return;
-            }
-            if(task.IsFaulted)
-            {
-                Debug.Log("Email Login task.Faulted");
+                // 코루틴을 사용하여 메인 스레드에서 UI 업데이트 실행
+                StartCoroutine(FailOpenCoroutine());
                 return;
             }
 
             var authResult = task.Result;
             user = authResult.User;
-
-            Debug.LogFormat("Firebase Eamil user created successfully : {0} ({1})", user.DisplayName, user.UserId);
+            StartCoroutine(SuccessOpenCoroutine());
         });
+    }
+
+    IEnumerator FailOpenCoroutine()
+    {
+        // 메인 스레드에서 실행되는 코루틴
+        yield return null;
+        FailOpen();
+    }
+
+    IEnumerator SuccessOpenCoroutine()
+    {
+        // 메인 스레드에서 실행되는 코루틴
+        yield return null;
+        SuccessOpen();
+    }
+
+    public void SuccessOpen()
+    {
+        Debug.Log("SuccessOpen");
+        successed.SetActive(true);
+    }
+
+    public void SuccessClose()
+    {
+        successed.SetActive(false);
+    }
+
+    public void FailOpen()
+    {
+        Debug.Log("FailOpen");
+        failed.SetActive(true);
+    }
+
+    public void FailClose()
+    {
+        failed.SetActive(false);
     }
 }

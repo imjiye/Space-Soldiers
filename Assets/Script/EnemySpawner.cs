@@ -54,7 +54,7 @@ public class EnemySpawner : MonoBehaviour
     {
         wave++;
 
-        int spawnCount = Mathf.RoundToInt(wave * 1f);
+        int spawnCount = Mathf.RoundToInt(wave * 1.5f);
 
         if(wave <= 4)
         {

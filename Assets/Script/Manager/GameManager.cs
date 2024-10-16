@@ -97,7 +97,6 @@ public class GameManager : MonoBehaviour
     {
         isGameover = true;
 
-        //int b = Get_1BestScore() + (int)surviveTime;
         // 기존 획득 점수
         int baseScore = PlayerPrefs.GetInt("score1");
 
@@ -108,14 +107,10 @@ public class GameManager : MonoBehaviour
         // 최종 점수를 최고 점수로 저장
         Set_1BestScore(finalScore);
 
-        //int s = PlayerPrefs.GetInt("score1") + (int)surviveTime;
-        //Set_1BestScore(s);
-
-        //int mc = Get_MyCoin();
         Set_MyCoin(coin);
 
         // 닉네임을 입력받아 저장하기
-        string username = InputTextName_O.text; 
+        string username = PlayerPrefs.GetString("username_O");
 
         UIManager.instance.SetActiveGameoverUI(true);
         UIManager.instance.Cur_Score((int)surviveTime);
@@ -124,7 +119,7 @@ public class GameManager : MonoBehaviour
         // 랭킹 업데이트 함수 호출
         UpdateRanking(finalScore, username);
 
-        //SoundManager.instance.PlaySound("end");
+        SoundManager.instance.PlaySFX("YouLose");
     }
     
     // 게임 클리어 처리
@@ -132,10 +127,6 @@ public class GameManager : MonoBehaviour
     {
         Debug.Log("GM_ClearGame");
         isGameover = true;
-
-        //int b = Get_1BestScore() + (int)surviveTime;
-        //int s = PlayerPrefs.GetInt("score1") + (int)surviveTime;
-        //Set_1BestScore(s);
 
         // 기존 획득 점수
         int baseScore = PlayerPrefs.GetInt("score1");
@@ -147,11 +138,10 @@ public class GameManager : MonoBehaviour
         // 최종 점수를 최고 점수로 저장
         Set_1BestScore(finalScore);
 
-        //int mc = Get_MyCoin();
         Set_MyCoin(coin);
 
         // 닉네임을 입력받아 저장하기
-        string username = InputTextName_C.text;
+        string username = PlayerPrefs.GetString("username_C");
 
         UIManager.instance.SetActiveGameClearUI(true);
         UIManager.instance.Cur_Score((int)surviveTime);
@@ -160,7 +150,7 @@ public class GameManager : MonoBehaviour
         // 랭킹 업데이트 함수 호출
         UpdateRanking(finalScore, username);
 
-        //SoundManager.instance.PlaySound("Clear");
+        SoundManager.instance.PlaySFX("Victory");
     }
 
     public void UpdateRanking(int score, string username)
@@ -201,7 +191,6 @@ public class GameManager : MonoBehaviour
         }
     }
 
-
     // 최고 점수 저장하기
     public int Get_1BestScore()
     {
@@ -233,4 +222,39 @@ public class GameManager : MonoBehaviour
     {
         PlayerPrefs.SetInt("MyCoin", Haning_Coin + Get_MyCoin());
     }
+    
+    // 닉네임 저장하기(게임오버시)
+    public void SaveUserName_O()
+    {
+        // InputField에서 입력된 텍스트를 가져옴
+        string username = InputTextName_O.text;
+
+        // 닉네임이 입력되지 않았으면 기본 값 설정
+        if (string.IsNullOrEmpty(username))
+        {
+            username = "NoName";
+        }
+
+        // 저장할 데이터를 PlayerPrefs에 저장
+        PlayerPrefs.SetString("username_O", username);
+        Debug.Log("Username O saved: " + username);
+    }
+
+    // 닉네임 저장하기(게임클리어시)
+    public void SaveUserName_C()
+    {
+        // InputField에서 입력된 텍스트를 가져옴
+        string username = InputTextName_C.text;
+
+        // 닉네임이 입력되지 않았으면 기본 값 설정
+        if (string.IsNullOrEmpty(username))
+        {
+            username = "NoName";
+        }
+
+        // 저장할 데이터를 PlayerPrefs에 저장
+        PlayerPrefs.SetString("username_C", username);
+        Debug.Log("Username C saved: " + username);
+    }
+
 }

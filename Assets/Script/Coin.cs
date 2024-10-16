@@ -9,7 +9,7 @@ public class Coin : MonoBehaviour, IItem
     public void Use(GameObject target)
     {
 
-        SoundManager.instance.PlaySound("coin");
+        SoundManager.instance.PlaySFX("coin");
         GameManager.instance.AddScore(score);
         GameManager.instance.AddCoin(coin);
 

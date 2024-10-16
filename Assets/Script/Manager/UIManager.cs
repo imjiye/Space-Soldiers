@@ -159,8 +159,8 @@ public class UIManager : MonoBehaviour
     // 게임 재시작
     public void GameRestart()
     {
+        Time.timeScale = 1f;
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-        OnTogglePause();
     }
 
     // 게임 종료
@@ -176,34 +176,21 @@ public class UIManager : MonoBehaviour
     // 씬 전환
     public void LoadScene(string sceneId)
     {
+        Time.timeScale = 1f;
         SceneManager.LoadScene(sceneId);
-        OnTogglePause();
-    }
-
-    // 화면 멈추거나 움직이기
-    public void OnTogglePause()
-    {
-        if (Time.timeScale == 0)
-        {
-            Time.timeScale = 1f;
-        }
-        else
-        {
-            Time.timeScale = 0f;
-        }
     }
 
     // 메뉴창 활성화
     public void OpenMenu()
     {
         Menu.SetActive(true);
-        OnTogglePause();
+        Time.timeScale = 0f;
     }
     // 메뉴창 비활성화
     public void CloseMenu()
     {
         Menu.SetActive(false);
-        OnTogglePause();
+        Time.timeScale = 1f;
     }
 
     // 옵션창 활성화
@@ -313,11 +300,11 @@ public class UIManager : MonoBehaviour
     {
         if(isOn)
         {
-            SoundManager.instance.BGMSoundAllOn();
+            BGMManager.instance.BGMSoundAllOn();
         }
         else
         {
-            SoundManager.instance.BGMSoundAllMute();
+            BGMManager.instance.BGMSoundAllMute();
         }
     }
 

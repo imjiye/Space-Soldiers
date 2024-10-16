@@ -9,6 +9,8 @@ public class TutorialControll : MonoBehaviour
     public GameObject StartNPC;
     public GameObject NPC;
     public GameObject[] TutorialText;
+    public AudioClip[] audioClips;
+    public AudioSource audioSources;
 
     private Coroutine tutorialCoroutine; // 현재 진행 중인 코루틴을 저장
 
@@ -18,8 +20,10 @@ public class TutorialControll : MonoBehaviour
     private bool isWaitingForNext = false; // 버튼 눌림 여부를 확인하기 위한 플래그
 
     // Start is called before the first frame update
-    void Start()
+
+    private void OnEnable()
     {
+        SoundManager.instance.PlaySFX("StartNPC_SFX");
         StartCoroutine("StartTutorial");
     }
 
@@ -27,6 +31,7 @@ public class TutorialControll : MonoBehaviour
     {
         yield return new WaitForSeconds(2f);
         StartNPC.SetActive(false);
+        SoundManager.instance.StopSFX();
         NPC.SetActive(true);
         nextButton.SetActive(true);
 
@@ -42,13 +47,18 @@ public class TutorialControll : MonoBehaviour
         for (int i = 0; i < TutorialText.Length; i++)
         {
             TutorialText[i].SetActive(true);
+            audioSources.clip = audioClips[i];
+            audioSources.Play();
+
+            // 오디오 클립의 길이 가져오기
+            float audioLength = audioSources.clip.length;
 
             // 버튼을 누르기 전까지 대기
-            isWaitingForNext = true; // 버튼이 눌릴 때까지 대기
+            isWaitingForNext = true;
             float waitTime = 0f;
 
-            // 6초 또는 버튼 클릭 대기
-            while (isWaitingForNext && waitTime < 12f)
+            // 오디오 클립의 길이와 18초 중에서 더 짧은 시간 동안 대기
+            while (isWaitingForNext && waitTime < Mathf.Min(audioLength, 18f))
             {
                 waitTime += Time.deltaTime;
                 yield return null; // 매 프레임 대기
@@ -57,8 +67,11 @@ public class TutorialControll : MonoBehaviour
             // 텍스트 비활성화
             TutorialText[i].SetActive(false);
         }
+
         NPC.SetActive(false);
         nextButton.SetActive(false);
+        audioSources.Stop();
+        SoundManager.instance.PlaySFX("TutorialClear");
         HomeButton.SetActive(true);
     }
 

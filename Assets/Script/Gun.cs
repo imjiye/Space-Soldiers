@@ -20,7 +20,7 @@ public class Gun : MonoBehaviour
 
     public Transform fireTransform;
 
-    //public ParticleSystem muzzleFlashEffect;
+    public ParticleSystem muzzleFlashEffect;
 
     private LineRenderer bulletLineRenderer;
 
@@ -94,7 +94,7 @@ public class Gun : MonoBehaviour
     // 발사 이펙트와 소리를 재생하고 탄알 궤적을 그림
     private IEnumerator ShotEffect(Vector3 hitPosition)
     {
-        //muzzleFlashEffect.Play();
+        muzzleFlashEffect.Play();
 
         gunAudioPlayer.PlayOneShot(gunData.shotClip);
 

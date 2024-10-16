@@ -11,7 +11,7 @@ public class LifePack : MonoBehaviour, IItem
 
         if (life != null)
         {
-            SoundManager.instance.PlaySound("life");
+            SoundManager.instance.PlaySFX("life");
             
             life.RestoreHealth(health);
         }

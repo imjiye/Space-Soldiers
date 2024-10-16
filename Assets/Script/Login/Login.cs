@@ -29,6 +29,7 @@ public class Login : MonoBehaviour
     public GameObject SignInPopUp; // 회원가입 창
     public GameObject QaAPopUp; // 문의사항 창
     public GameObject Quit; //  주의사항 창
+    public GameObject SignUpSuccessPopup; // 회원가입 성공 알림 창
 
     public string scenename;
 
@@ -183,7 +184,7 @@ public class Login : MonoBehaviour
 
     void CreateUser()
     {
-        if(email.Length < 1 || password.Length < 1)
+        if(email.Length < 1 || password.Length < 4)
         {
             loginResult_Sign.text = "이메일이나 비밀번호가 비어있습니다.";
             Debug.Log("이메일이나 비밀번호가 비어있습니다.");
@@ -209,9 +210,15 @@ public class Login : MonoBehaviour
             Firebase.Auth.AuthResult newUser = task.Result;
             Debug.LogFormat("Firebase user created successfully: {0} ({1})",
                 newUser.User.DisplayName, newUser.User.UserId);
+            SignUpSuccessPopup.SetActive(true);
         });
     }
 
+    // 회원가입 성공창 닫기
+    public void SignUpSuccessPopupClose()
+    {
+        SignUpSuccessPopup.SetActive(false);
+    }
 
     // (이메일)로그인 버튼 클릭시 실행할 함수
     public void LoginBtn()
@@ -251,8 +258,6 @@ public class Login : MonoBehaviour
 
         });
     }
-
-
 
     // 연동 해제
     public void LogoutBtn()
